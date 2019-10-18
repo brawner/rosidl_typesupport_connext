@@ -357,6 +357,20 @@ to_message__@(message.structure.namespaced_type.name)(
   return success;
 }
 
+void
+init_function__@(message.structure.namespaced_type.name)(
+  void * message_memory, rosidl_generator_cpp::MessageInitialization _init)
+{
+  new (message_memory) @('::'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name]))(_init);
+}
+
+void
+fini_function__@(message.structure.namespaced_type.name)(void * message_memory)
+{
+  auto typed_message = static_cast<@('::'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name])) *>(message_memory);
+  typed_message->~@(message.structure.namespaced_type.name)();
+}
+
 static message_type_support_callbacks_t _@(message.structure.namespaced_type.name)__callbacks = {
   "@('::'.join([package_name] + list(interface_path.parents[0].parts)))",
   "@(message.structure.namespaced_type.name)",
@@ -364,7 +378,10 @@ static message_type_support_callbacks_t _@(message.structure.namespaced_type.nam
   nullptr,
   nullptr,
   &to_cdr_stream__@(message.structure.namespaced_type.name),
-  &to_message__@(message.structure.namespaced_type.name)
+  &to_message__@(message.structure.namespaced_type.name),
+  sizeof(@('::'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name]))),
+  &init_function__@(message.structure.namespaced_type.name),
+  &fini_function__@(message.structure.namespaced_type.name)
 };
 
 static rosidl_message_type_support_t _@(message.structure.namespaced_type.name)__handle = {

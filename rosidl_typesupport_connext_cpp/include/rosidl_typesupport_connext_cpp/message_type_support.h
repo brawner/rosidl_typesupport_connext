@@ -19,6 +19,8 @@
 
 #include "rosidl_generator_c/message_type_support_struct.h"
 
+#include "rosidl_generator_cpp/message_initialization.hpp"
+
 // forward declare DDS_TypeCode
 struct DDS_TypeCode;
 
@@ -42,6 +44,10 @@ typedef struct message_type_support_callbacks_t
   bool (* to_message)(
     const rcutils_uint8_array_t * cdr_stream,
     void * untyped_ros_message);
+  // size of the ROS Message type
+  size_t size_of;
+  void (* init_function)(void *, rosidl_generator_cpp::MessageInitialization);
+  void (* fini_function)(void *);
 } message_type_support_callbacks_t;
 
 #endif  // ROSIDL_TYPESUPPORT_CONNEXT_CPP__MESSAGE_TYPE_SUPPORT_H_

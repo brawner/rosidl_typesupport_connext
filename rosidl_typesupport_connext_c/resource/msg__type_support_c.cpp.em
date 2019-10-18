@@ -517,6 +517,22 @@ _@(message.structure.namespaced_type.name)__to_message(
   return success;
 }
 
+static void
+_@(message.structure.namespaced_type.name)__init_function(
+  void * message_memory, rosidl_generator_cpp::MessageInitialization _init)
+{
+  // TODO(karsten1987): initializers are not yet implemented for typesupport c
+  // see https://github.com/ros2/ros2/issues/397
+  (void) _init;
+  @('__'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name]))__init(static_cast<@('__'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name])) *>(message_memory));
+}
+
+static void
+_@(message.structure.namespaced_type.name)__fini_function(void * message_memory)
+{
+  @('__'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name]))__fini(static_cast<@('__'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name])) *>(message_memory));
+}
+
 @# // Collect the callback functions and provide a function to get the type support struct.
 static message_type_support_callbacks_t _@(message.structure.namespaced_type.name)__callbacks = {
   "@('::'.join([package_name] + list(interface_path.parents[0].parts)))",  // message_namespace
@@ -525,7 +541,10 @@ static message_type_support_callbacks_t _@(message.structure.namespaced_type.nam
   _@(message.structure.namespaced_type.name)__convert_ros_to_dds,  // convert_ros_to_dds
   _@(message.structure.namespaced_type.name)__convert_dds_to_ros,  // convert_dds_to_ros
   _@(message.structure.namespaced_type.name)__to_cdr_stream,  // to_cdr_stream
-  _@(message.structure.namespaced_type.name)__to_message  // to_message
+  _@(message.structure.namespaced_type.name)__to_message,  // to_message
+  sizeof(@('__'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name]))),
+  _@(message.structure.namespaced_type.name)__init_function,
+  _@(message.structure.namespaced_type.name)__fini_function
 };
 
 static rosidl_message_type_support_t _@(message.structure.namespaced_type.name)__type_support = {
